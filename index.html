@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSS Contribution Payment Gateway</title>
+    <style>
+        :root {
+            --primary: #0b3968;
+            --primary-light: #16528e;
+            --accent: #0284c7;
+            --bg: #f1f5f9;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #cbd5e1;
+            --success: #059669;
+            --danger: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: #fff;
+            padding: 18px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+        .container {
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .brand-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .sss-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 2px solid #facc15;
+        }
+
+        .brand h1 {
+            font-size: 1.28rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+        .brand span {
+            font-size: 0.82rem;
+            opacity: 0.9;
+            display: block;
+        }
+
+        .status-pill {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #34d399;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr 1.35fr;
+            gap: 24px;
+            padding: 28px 0;
+        }
+
+        @media (max-width: 840px) {
+            main { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .step-num {
+            background: var(--primary);
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .step-header h2 {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #334155;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.94rem;
+            transition: all 0.2s;
+            background: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #1e293b;
+            border: none;
+            padding: 0 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.84rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover { background: #cbd5e1; }
+
+        .prn-status {
+            font-size: 0.8rem;
+            margin-top: 6px;
+            color: var(--success);
+            font-weight: 600;
+            display: none;
+        }
+
+        /* Payment Channel Cards */
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 500px) {
+            .channel-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .channel-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            background: #fff;
+        }
+
+        .channel-card:hover {
+            border-color: #94a3b8;
+            transform: translateY(-1px);
+        }
+
+        .channel-card.active {
+            border-color: var(--primary);
+            background: #eff6ff;
+            box-shadow: 0 2px 6px rgba(11, 57, 104, 0.12);
+        }
+
+        .brand-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .bg-gcash { background: #007dfe; }
+        .bg-maya { background: #16a34a; }
+        .bg-palawan { background: #eab308; color: #1e293b; }
+        .bg-instapay { background: #dc2626; }
+        .bg-card { background: #1e293b; }
+        .bg-remit { background: #7c3aed; }
+
+        .channel-sub {
+            display: block;
+            font-size: 0.74rem;
+            color: var(--muted);
+        }
+
+        /* Interactive Payment Panel */
+        .gateway-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .timer-badge {
+            display: inline-block;
+            background: #fee2e2;
+            color: #b91c1c;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        /* Breakdown Table */
+        .breakdown {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 18px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .b-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: #475569;
+        }
+
+        .b-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary);
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 8px;
+            margin-top: 6px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover { background: var(--primary-light); }
+        .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; }
+
+        .btn-done {
+            flex: 1;
+            background: var(--success);
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-done:hover { opacity: 0.92; }
+
+        .btn-undone {
+            flex: 1;
+            background: #e2e8f0;
+            color: #1e293b;
+            border: none;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-undone:hover { background: #cbd5e1; }
+
+        /* Ledger Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            color: var(--muted);
+            font-weight: 600;
+            background: #f8fafc;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--muted);
+            padding: 18px 8px;
+            font-style: italic;
+        }
+
+        .badge-paid {
+            background: #dcfce7;
+            color: #166534;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge-undone {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Modals */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.68);
+            backdrop-filter: blur(2px);
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 999;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 14px;
+            max-width: 440px;
+            width: 100%;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.18);
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .qr-popup-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 14px 0;
+            text-align: center;
+        }
+
+        .qr-popup-img {
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+            background: #fff;
+            padding: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .qr-popup-svg {
+            width: 220px;
+            height: 220px;
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .receipt-paper {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 0.85rem;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .barcode {
+            height: 36px;
+            background: repeating-linear-gradient(
+                90deg,
+                #1e293b 0px, #1e293b 2px,
+                transparent 2px, transparent 5px,
+                #1e293b 5px, #1e293b 9px,
+                transparent 9px, transparent 11px
+            );
+            margin-top: 12px;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 4px solid #e2e8f0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 14px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-flex">
+            <div class="brand-wrap">
+                <!-- SSS Logo Emblem -->
+                <div class="sss-logo" aria-label="SSS Logo">
+                    <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="32" cy="32" r="30" fill="#0b3968"/>
+                        <circle cx="32" cy="32" r="25" fill="none" stroke="#facc15" stroke-width="2.2"/>
+                        <path d="M18 22 C24 14, 40 14, 46 22" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M18 42 C24 50, 40 50, 46 42" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+                        <text x="32" y="37" text-anchor="middle" font-size="16" font-weight="900" fill="#ffffff" letter-spacing="0.5">SSS</text>
+                    </svg>
+                </div>
+                <div class="brand">
+                    <h1>Social Security System (SSS)</h1>
+                    <span>Electronic PRN &amp; Contribution Payment Gateway</span>
+                </div>
+            </div>
+            <div class="status-pill">
+                <span class="dot"></span>
+                <span>PRN Payment Portal Ready</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <!-- Left Column: Member & PRN Lookup -->
+            <div>
+                <div class="card">
+                    <div class="step-header">
+                        <div class="step-num">1</div>
+                        <h2>Member &amp; PRN Details</h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prnInput">Payment Reference Number (PRN)</label>
+                        <div class="input-row">
+                            <input type="text" id="prnInput" value="" placeholder="Enter or click New PRN" maxlength="16">
+                            <button type="button" class="btn-secondary" onclick="generateNewPRN()">New PRN</button>
+                        </div>
+                        <div class="prn-status" id="prnStatus">✓ Active PRN Verified — Ready for Payment</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="memberName">Member Name</label>
+                        <input type="text" id="memberName" value="" placeholder="Enter full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="memberType">Membership Category</label>
+                        <select id="memberType" onchange="autoFillContribution()">
+                            <option value="" selected disabled>Select membership category</option>
+                            <option value="voluntary">Voluntary Member</option>
+                            <option value="self">Self-Employed</option>
+                            <option value="ofw">Overseas Filipino Worker (OFW)</option>
+                            <option value="nws">Non-Working Spouse</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="applicableMonth">Applicable Period</label>
+                        <select id="applicableMonth">
+                            <option value="" selected disabled>Select applicable period</option>
+                            <option value="Nov 2026">November 2026 (1 Month)</option>
+                            <option value="Oct - Dec 2026">Oct – Dec 2026 (Q4 Quarterly)</option>
+                            <option value="Jan - Dec 2026">Jan – Dec 2026 (Annual)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="mscSelect">Monthly Salary Credit (MSC) / Contribution</label>
+                        <select id="mscSelect" onchange="updateTotals()">
+                            <option value="0" selected disabled>Select contribution amount</option>
+                            <option value="560">₱560.00 (MSC ₱4,000)</option>
+                            <option value="1400">₱1,400.00 (MSC ₱10,000)</option>
+                            <option value="2100">₱2,100.00 (MSC ₱15,000)</option>
+                            <option value="2800">₱2,800.00 (MSC ₱20,000)</option>
+                            <option value="4200">₱4,200.00 (MSC ₱30,000 - Max)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Recent Session Transactions -->
+                <div class="card">
+                    <div class="step-header">
+                        <div class="step-num">✓</div>
+                        <h2>Session Payment History</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>PRN / Ref</th>
+                                <th>Channel</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody">
+                            <tr id="emptyHistoryRow">
+                                <td colspan="4" class="empty-state">No transactions recorded in this session yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Column: Payment Gateway -->
+            <div>
+                <div class="card">
+                    <div class="step-header">
+                        <div class="step-num">2</div>
+                        <h2>Choose Payment Channel</h2>
+                    </div>
+
+                    <div class="channel-grid">
+                        <div class="channel-card active" onclick="selectChannel('gcash', this)">
+                            <span class="brand-pill bg-gcash">GCash</span>
+                            <span class="channel-sub">Instant e-Wallet</span>
+                        </div>
+                        <div class="channel-card" onclick="selectChannel('maya', this)">
+                            <span class="brand-pill bg-maya">Maya</span>
+                            <span class="channel-sub">Wallet / QR Ph</span>
+                        </div>
+                        <div class="channel-card" onclick="selectChannel('palawan', this)">
+                            <span class="brand-pill bg-palawan">PalawanPay</span>
+                            <span class="channel-sub">App / Express</span>
+                        </div>
+                        <div class="channel-card" onclick="selectChannel('instapay', this)">
+                            <span class="brand-pill bg-instapay">InstaPay</span>
+                            <span class="channel-sub">Bank Transfer</span>
+                        </div>
+                        <div class="channel-card" onclick="selectChannel('card', this)">
+                            <span class="brand-pill bg-card">Credit Card</span>
+                            <span class="channel-sub">Visa / MC / JCB</span>
+                        </div>
+                        <div class="channel-card" onclick="selectChannel('remit', this)">
+                            <span class="brand-pill bg-remit">Remittances</span>
+                            <span class="channel-sub">OTC &amp; Global</span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Channel Panel -->
+                    <div class="gateway-box" id="gatewayPanel"></div>
+
+                    <!-- Summary Box -->
+                    <div class="breakdown">
+                        <div class="b-row">
+                            <span>Contribution Principal:</span>
+                            <span id="dispBase">₱0.00</span>
+                        </div>
+                        <div class="b-row">
+                            <span>Gateway Convenience Fee (<span id="dispChannel">GCash</span>):</span>
+                            <span id="dispFee">₱15.00</span>
+                        </div>
+                        <div class="b-total">
+                            <span>Total Payable:</span>
+                            <span id="dispTotal">₱15.00</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-primary" id="payBtn" onclick="startPaymentFlow()">
+                        Pay ₱15.00 via GCash
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- QR Code Popup Modal (Opens when Pay is clicked for GCash, Maya, PalawanPay, or InstaPay) -->
+    <div class="overlay" id="qrModal">
+        <div class="modal" style="text-align: center;">
+            <span class="timer-badge" id="qrTimer">QR Expires in 05:00</span>
+            <h3 id="qrModalTitle" style="color: var(--primary); font-size: 1.15rem;">Scan QR Code to Pay</h3>
+            <p id="qrModalSubtitle" style="font-size: 0.84rem; color: var(--muted); margin-top: 4px;">
+                Open your app, scan the QR code below, and tap <strong>Done</strong> once completed.
+            </p>
+
+            <div class="qr-popup-box">
+                <img id="qrPopupImage" class="qr-popup-img" src="88638.jpg" alt="InstaPay QR Code"
+                    onerror="this.style.display='none'; document.getElementById('qrPopupFallback').style.display='block';">
+
+                <div id="qrPopupFallback" style="display: none;">
+                    <svg class="qr-popup-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="100" fill="#fff"/>
+                        <path fill="#0f172a" d="M10,10 h25 v25 h-25 z M15,15 v15 h15 v-15 z M19,19 h7 v7 h-7 z
+                        M65,10 h25 v25 h-25 z M70,15 v15 h15 v-15 z M74,19 h7 v7 h-7 z
+                        M10,65 h25 v25 h-25 z M15,70 v15 h15 v-15 z M19,74 h7 v7 h-7 z
+                        M42,12 h6 v6 h-6 z M52,18 h6 v12 h-6 z M42,30 h10 v6 h-10 z
+                        M12,42 h12 v6 h-12 z M30,45 h15 v6 h-15 z M52,42 h12 v12 h-12 z M70,45 h18 v6 h-18 z
+                        M42,60 h8 v14 h-8 z M56,64 h14 v8 h-14 z M76,60 h12 v12 h-12 z
+                        M45,80 h18 v8 h-18 z M70,78 h18 v10 h-18 z"/>
+                        <rect x="36" y="40" width="28" height="20" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="0.6"/>
+                        <text x="50" y="48" font-size="6.5" font-weight="800" fill="#1e3a8a" text-anchor="middle">insta</text>
+                        <text x="50" y="56" font-size="7.5" font-weight="900" fill="#dc2626" text-anchor="middle">Pay</text>
+                    </svg>
+                </div>
+
+                <div style="margin-top: 12px; font-size: 0.86rem;">
+                    <div><strong>Channel:</strong> <span id="qrChannelLabel">GCash</span></div>
+                    <div><strong>PRN:</strong> <span id="qrPrnLabel">N/A</span></div>
+                    <div style="font-size: 1.05rem; color: var(--primary); margin-top: 4px;">
+                        <strong>Amount: <span id="qrAmountLabel">₱15.00</span></strong>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-secondary" style="margin-top: 10px; padding: 8px 14px;" onclick="downloadQRCode()">
+                    Save QR Image
+                </button>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 14px;">
+                <button type="button" class="btn-done" onclick="handleQrDone()">Done</button>
+                <button type="button" class="btn-undone" onclick="handleQrUndone()">Undone</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Modal (For Card Payments) -->
+    <div class="overlay" id="processingModal">
+        <div class="modal" style="text-align: center; padding: 32px 24px;">
+            <div class="spinner"></div>
+            <h3 style="color: var(--primary);">Contacting Payment Switch...</h3>
+            <p style="font-size: 0.85rem; color: var(--muted); margin-top: 6px;">
+                Validating PRN and posting real-time contribution credit...
+            </p>
+        </div>
+    </div>
+
+    <!-- Receipt / OTC Slip Modal -->
+    <div class="overlay" id="receiptModal">
+        <div class="modal">
+            <div style="text-align: center;">
+                <div id="receiptBadge" style="display:inline-block; background:#dcfce7; color:#166534; padding:4px 12px; border-radius:20px; font-weight:700; font-size:0.8rem; margin-bottom:8px;">
+                    ✓ PAYMENT POSTED
+                </div>
+                <h3 id="receiptHeading" style="color: var(--primary);">SSS Electronic Payment Receipt</h3>
+                <p style="font-size: 0.78rem; color: var(--muted);">Social Security System — Payment Confirmation</p>
+            </div>
+
+            <div class="receipt-paper" id="receiptBody"></div>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn-secondary" style="flex:1; padding:12px;" onclick="window.print()">Print Receipt</button>
+                <button type="button" class="btn-primary" style="flex:1; padding:12px;" onclick="closeReceiptModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedChannel = 'gcash';
+        let timerInterval = null;
+
+        const channels = {
+            gcash: {
+                name: 'GCash',
+                fee: 15,
+                type: 'qr',
+                render: () => `
+                    <div class="form-group" style="margin-bottom:8px;">
+                        <label>GCash Mobile Number</label>
+                        <input type="tel" id="payerAccount" value="" placeholder="09XX XXX XXXX">
+                    </div>
+                    <span style="font-size:0.8rem; color:var(--muted);">
+                        Click <strong>Pay via GCash</strong> below to pop up the QR code for instant payment.
+                    </span>`
+            },
+            maya: {
+                name: 'Maya',
+                fee: 15,
+                type: 'qr',
+                render: () => `
+                    <div class="form-group" style="margin-bottom:8px;">
+                        <label>Maya Wallet Mobile Number</label>
+                        <input type="tel" id="payerAccount" value="" placeholder="09XX XXX XXXX">
+                    </div>
+                    <span style="font-size:0.8rem; color:var(--muted);">
+                        Click <strong>Pay via Maya</strong> below to pop up the QR code for instant payment.
+                    </span>`
+            },
+            palawan: {
+                name: 'PalawanPay',
+                fee: 12,
+                type: 'qr',
+                render: () => `
+                    <div class="form-group" style="margin-bottom:8px;">
+                        <label>PalawanPay Registered Mobile</label>
+                        <input type="tel" id="payerAccount" value="" placeholder="09XX XXX XXXX">
+                    </div>
+                    <span style="font-size:0.8rem; color:var(--muted);">
+                        Click <strong>Pay via PalawanPay</strong> below to pop up the QR code (₱12.00 flat fee).
+                    </span>`
+            },
+            instapay: {
+                name: 'InstaPay',
+                fee: 10,
+                type: 'qr',
+                render: () => `
+                    <div class="form-group" style="margin-bottom:8px;">
+                        <label>Select Participating Bank</label>
+                        <select id="payerAccount">
+                            <option value="" selected disabled>Choose bank</option>
+                            <option value="BDO Online">BDO Unibank (InstaPay)</option>
+                            <option value="BPI Online">BPI Mobile / Online</option>
+                            <option value="UnionBank">UnionBank Online</option>
+                            <option value="Metrobank">Metrobank Direct</option>
+                            <option value="LandBank">LandBank iAccess</option>
+                        </select>
+                    </div>
+                    <span style="font-size:0.8rem; color:var(--muted);">
+                        Click <strong>Pay via InstaPay</strong> below to pop up the InstaPay QR code.
+                    </span>`
+            },
+            card: {
+                name: 'Credit / Debit Card',
+                fee: 25,
+                type: 'card',
+                render: () => `
+                    <div class="form-group">
+                        <label>Cardholder Name</label>
+                        <input type="text" id="cardHolder" value="" placeholder="Enter name on card">
+                    </div>
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <div class="input-row">
+                            <input type="text" id="payerAccount" value="" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
+                            <span class="btn-secondary" id="cardBrand" style="display:flex;align-items:center;">CARD</span>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div>
+                            <label>Expiry (MM/YY)</label>
+                            <input type="text" value="" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div>
+                            <label>CVV / CVC</label>
+                            <input type="password" value="" placeholder="•••" maxlength="4">
+                        </div>
+                    </div>`
+            },
+            remit: {
+                name: 'Remittance Partner',
+                fee: 20,
+                type: 'otc',
+                render: () => `
+                    <div class="form-group">
+                        <label>Select Remittance / Over-the-Counter Channel</label>
+                        <select id="payerAccount">
+                            <option value="" selected disabled>Choose remittance partner</option>
+                            <option value="Bayad Center / Bayad App">Bayad Center / Bayad Mobile App</option>
+                            <option value="Palawan Pawnshop Express">Palawan Pawnshop Express Pera Padala</option>
+                            <option value="Western Union (Domestic/Int'l)">Western Union (Domestic &amp; OFW)</option>
+                            <option value="Remitly (OFW Remittance)">Remitly (Overseas Direct)</option>
+                            <option value="Cebuana Lhuillier">Cebuana Lhuillier Pera Padala</option>
+                        </select>
+                    </div>
+                    <p style="font-size:0.82rem; color:#475569; background:#fff; padding:10px; border-radius:6px; border:1px solid #cbd5e1;">
+                        <strong>How Remittance Works:</strong> Clicking proceed will generate a <strong>Partner Payment Slip</strong> with a reference barcode to present at any branch or partner app.
+                    </p>`
+            }
+        };
+
+        function generateNewPRN() {
+            const rand = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('prnInput').value = `PRN261124${rand}`;
+            const status = document.getElementById('prnStatus');
+            status.style.display = 'block';
+            status.textContent = '✓ Active PRN Generated & Verified';
+        }
+
+        function autoFillContribution() {
+            const type = document.getElementById('memberType').value;
+            const msc = document.getElementById('mscSelect');
+            if (type === 'ofw') {
+                msc.value = '1400';
+            } else if (type === 'nws') {
+                msc.value = '560';
+            }
+            updateTotals();
+        }
+
+        function selectChannel(key, el) {
+            selectedChannel = key;
+            document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+
+            document.getElementById('gatewayPanel').innerHTML = channels[key].render();
+            updateTotals();
+        }
+
+        function startQRTimer() {
+            clearInterval(timerInterval);
+            let seconds = 300;
+            const timerEl = document.getElementById('qrTimer');
+            if (timerEl) timerEl.textContent = 'QR Expires in 05:00';
+
+            timerInterval = setInterval(() => {
+                const el = document.getElementById('qrTimer');
+                if (!el) {
+                    clearInterval(timerInterval);
+                    return;
+                }
+                seconds--;
+                if (seconds <= 0) {
+                    el.textContent = 'QR Expired — Click Undone to retry';
+                    clearInterval(timerInterval);
+                    return;
+                }
+                const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+                const s = String(seconds % 60).padStart(2, '0');
+                el.textContent = `QR Expires in ${m}:${s}`;
+            }, 1000);
+        }
+
+        function stopQRTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function formatCard(input) {
+            let v = input.value.replace(/\D/g, '').substring(0, 16);
+            input.value = v.replace(/(.{4})/g, '$1 ').trim();
+            const brand = document.getElementById('cardBrand');
+            if (brand) {
+                if (v.startsWith('5')) brand.textContent = 'MASTERCARD';
+                else if (v.startsWith('4')) brand.textContent = 'VISA';
+                else brand.textContent = 'CARD';
+            }
+        }
+
+        function updateTotals() {
+            const base = parseFloat(document.getElementById('mscSelect').value) || 0;
+            const ch = channels[selectedChannel];
+            const total = base + ch.fee;
+
+            const fmt = (n) => '₱' + n.toLocaleString('en-PH', { minimumFractionDigits: 2 });
+
+            document.getElementById('dispChannel').textContent = ch.name;
+            document.getElementById('dispBase').textContent = fmt(base);
+            document.getElementById('dispFee').textContent = fmt(ch.fee);
+            document.getElementById('dispTotal').textContent = fmt(total);
+
+            const btn = document.getElementById('payBtn');
+            btn.textContent = ch.type === 'otc'
+                ? `Generate ${ch.name} Payment Slip (${fmt(total)})`
+                : `Pay ${fmt(total)} via ${ch.name}`;
+        }
+
+        function startPaymentFlow() {
+            const ch = channels[selectedChannel];
+
+            if (ch.type === 'otc') {
+                finalizeTransaction(true);
+                return;
+            }
+
+            if (ch.type === 'qr') {
+                openQrModal();
+                return;
+            }
+
+            // Credit / Debit Card flow without OTP
+            document.getElementById('processingModal').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('processingModal').style.display = 'none';
+                finalizeTransaction(false);
+            }, 1000);
+        }
+
+        function openQrModal() {
+            const ch = channels[selectedChannel];
+            const prn = document.getElementById('prnInput').value || 'N/A';
+            const total = document.getElementById('dispTotal').textContent;
+
+            document.getElementById('qrModalTitle').textContent = `Pay via ${ch.name} — Scan QR`;
+            document.getElementById('qrModalSubtitle').innerHTML =
+                `Scan the QR code using your <strong>${ch.name}</strong> app, then click <strong>Done</strong> or <strong>Undone</strong>.`;
+            document.getElementById('qrChannelLabel').textContent = ch.name;
+            document.getElementById('qrPrnLabel').textContent = prn;
+            document.getElementById('qrAmountLabel').textContent = total;
+
+            document.getElementById('qrModal').style.display = 'flex';
+            startQRTimer();
+        }
+
+        function handleQrDone() {
+            stopQRTimer();
+            document.getElementById('qrModal').style.display = 'none';
+            finalizeTransaction(false);
+        }
+
+        function handleQrUndone() {
+            stopQRTimer();
+            document.getElementById('qrModal').style.display = 'none';
+
+            const prn = document.getElementById('prnInput').value || 'N/A';
+            const total = document.getElementById('dispTotal').textContent;
+            const ch = channels[selectedChannel];
+            const traceNo = 'UND-' + Math.floor(10000000 + Math.random() * 90000000);
+
+            const emptyRow = document.getElementById('emptyHistoryRow');
+            if (emptyRow) emptyRow.remove();
+
+            const tbody = document.getElementById('historyBody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${prn}<br><small style="color:var(--muted)">${traceNo}</small></td>
+                <td>${ch.name}</td>
+                <td>${total}</td>
+                <td><span class="badge-undone">UNDONE</span></td>
+            `;
+            tbody.prepend(row);
+        }
+
+        function downloadQRCode() {
+            const img = document.getElementById('qrPopupImage');
+            if (img && img.style.display !== 'none' && img.complete && img.naturalWidth > 0) {
+                const link = document.createElement('a');
+                link.href = img.src;
+                link.download = 'SSS_InstaPay_QR.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                return;
+            }
+
+            const svg = document.querySelector('#qrPopupFallback svg');
+            if (!svg) return;
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'SSS_InstaPay_QR.svg';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function finalizeTransaction(isOTC) {
+            const prn = document.getElementById('prnInput').value || 'N/A';
+            const member = document.getElementById('memberName').value || 'N/A';
+            const period = document.getElementById('applicableMonth').value || 'N/A';
+            const total = document.getElementById('dispTotal').textContent;
+            const ch = channels[selectedChannel];
+            const account = document.getElementById('payerAccount')?.value || ch.name;
+            const traceNo = (isOTC ? 'OTC-' : 'SBR-') + Math.floor(10000000 + Math.random() * 90000000);
+            const timestamp = new Date().toLocaleString('en-PH');
+
+            const badge = document.getElementById('receiptBadge');
+            const heading = document.getElementById('receiptHeading');
+
+            if (isOTC) {
+                badge.style.background = '#fef3c7';
+                badge.style.color = '#92400e';
+                badge.textContent = '⏳ AWAITING PARTNER PAYMENT';
+                heading.textContent = 'SSS Remittance Payment Slip';
+            } else {
+                badge.style.background = '#dcfce7';
+                badge.style.color = '#166534';
+                badge.textContent = '✓ REAL-TIME POSTED';
+                heading.textContent = 'SSS Electronic Contribution Receipt';
+            }
+
+            document.getElementById('receiptBody').innerHTML = `
+                <div class="receipt-row"><span>Reference / SBR No.:</span><strong>${traceNo}</strong></div>
+                <div class="receipt-row"><span>PRN:</span><strong>${prn}</strong></div>
+                <div class="receipt-row"><span>Member Name:</span><strong>${member}</strong></div>
+                <div class="receipt-row"><span>Applicable Period:</span><span>${period}</span></div>
+                <div class="receipt-row"><span>Payment Channel:</span><span>${ch.name} (${account})</span></div>
+                <div class="receipt-row"><span>Date &amp; Time:</span><span>${timestamp}</span></div>
+                <div class="receipt-row" style="border-top:1px solid #cbd5e1; padding-top:8px; margin-top:8px; font-size:1rem;">
+                    <strong>Total Amount:</strong><strong style="color:var(--primary);">${total}</strong>
+                </div>
+                ${isOTC ? '<div class="barcode"></div><div style="text-align:center;font-size:0.75rem;margin-top:4px;">Present barcode at partner counter within 24 hours</div>' : ''}
+            `;
+
+            const emptyRow = document.getElementById('emptyHistoryRow');
+            if (emptyRow) emptyRow.remove();
+
+            const tbody = document.getElementById('historyBody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${prn}<br><small style="color:var(--muted)">${traceNo}</small></td>
+                <td>${ch.name}</td>
+                <td>${total}</td>
+                <td><span class="${isOTC ? 'badge-pending' : 'badge-paid'}">${isOTC ? 'SLIP ISSUED' : 'POSTED'}</span></td>
+            `;
+            tbody.prepend(row);
+
+            document.getElementById('receiptModal').style.display = 'flex';
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').style.display = 'none';
+        }
+
+        // Initialize
+        selectChannel('gcash', document.querySelector('.channel-card.active'));
+    </script>
+</body>
+</html>
